@@ -1,5 +1,5 @@
-#ifndef MMIO_LIB_H
-#define MMIO_LIB_H
+#ifndef LIB_MMIO_H
+#define LIB_MMIO_H
 
 #include <stdint.h>
 

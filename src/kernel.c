@@ -1,14 +1,7 @@
-#include "lib/mmio/mmio.h"
-
-#define UART_BASE 0x09000000
-#define UART_DR (UART_BASE + 0x00)
+#include "lib/uart/uart.h"
 
 void kernel_main() {
-  char *hello = "Hello, World !";
-
-  while (*hello) {
-    mmio_write(UART_DR, *hello++);
-  }
+  uart_init();
 
   while (1) {
   }
