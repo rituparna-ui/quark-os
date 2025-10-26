@@ -1,13 +1,13 @@
-#include <stdint.h>
+#include "lib/mmio/mmio.h"
 
 #define UART_BASE 0x09000000
-#define UART_DR ((volatile uint32_t *)(UART_BASE + 0x00))
+#define UART_DR (UART_BASE + 0x00)
 
 void kernel_main() {
   char *hello = "Hello, World !";
 
   while (*hello) {
-    *UART_DR = *hello++;
+    mmio_write(UART_DR, *hello++);
   }
 
   while (1) {
