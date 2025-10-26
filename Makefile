@@ -29,7 +29,11 @@ LDFLAGS := -nostdlib -T linker.ld
 
 # QEMU Config
 # QEMU_FLAGS := -machine virt,virtualization=on,secure=on -nographic -cpu cortex-a72 -kernel $(TARGET)
-QEMU_FLAGS := -machine virt -nographic -cpu cortex-a72 -kernel $(TARGET)
+QEMU_FLAGS := -machine virt -nographic -cpu cortex-a72 \
+							-kernel $(TARGET)
+							# -gdb tcp::1236
+							# -serial telnet:localhost:1234,server \
+							# -monitor telnet:localhost:1235,server,nowait \
 
 all: $(TARGET)
 
