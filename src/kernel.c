@@ -5,6 +5,11 @@
 
 void kernel_main() {
   *UART_DR = 'H';
+  *UART_DR = 'e';
+  *UART_DR = 'l';
+  *UART_DR = 'l';
+  *UART_DR = 'o';
+  *UART_DR = '!';
 
   while (1) {
   }
