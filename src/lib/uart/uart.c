@@ -1,5 +1,6 @@
 #include "uart.h"
 #include "../mmio/mmio.h"
+#include "../strings/strings.h"
 
 void uart_putc(const char c) {
   // check if transmit fifo is full - TXFF
@@ -49,4 +50,10 @@ void uart_init() {
 void uart_println(const char *str) {
   uart_puts(str);
   uart_putc('\n');
+}
+
+void uart_put_uint(uint32_t val) {
+  char s[20];
+  uint_to_string(val, s);
+  uart_puts(s);
 }

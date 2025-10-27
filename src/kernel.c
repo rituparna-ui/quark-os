@@ -6,6 +6,8 @@ void kernel_main() {
 
   print_current_el_name();
 
+  uart_put_uint(81283924);
+
   while (1) {
   }
 }
