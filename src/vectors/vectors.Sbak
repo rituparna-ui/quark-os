@@ -1,0 +1,63 @@
+// =============================================================================
+// Exception Vector Table
+// =============================================================================
+
+// Macro to define a single vector entry.
+// Each entry is aligned to a 128-byte boundary and contains a branch
+// instruction to the specified handler label.
+.section .text.vectors
+.align 11
+
+.global _exception_vector_table
+
+_exception_vector_table:
+  // Group 1: Not using.
+  // Kernel will never use the userspace stack
+  .org 0x000
+  b unhandled_exception
+  .org 0x080
+  b unhandled_exception
+  .org 0x100
+  b unhandled_exception
+  .org 0x180
+  b unhandled_exception
+
+  // Group 2: Same exception level
+  .org 0x200
+  b sync_req_handler
+  .org 0x280
+  b interrupt_handler
+  .org 0x300
+  b unhandled_exception
+  .org 0x380
+  b unhandled_exception
+
+  // Group 3: aarch64(EL0) -> EL1
+  .org 0x400
+  b unhandled_exception
+  .org 0x480
+  b unhandled_exception
+  .org 0x500
+  b unhandled_exception
+  .org 0x580
+  b unhandled_exception
+
+  // Group 4: aarch32: not using
+  .org 0x600
+  b unhandled_exception
+  .org 0x680
+  b unhandled_exception
+  .org 0x700
+  b unhandled_exception
+  .org 0x780
+  b unhandled_exception
+
+.section .text
+
+unhandled_exception:
+  b .
+
+sync_req_handler:
+  stp
+
+interrupt_handler:
