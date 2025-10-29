@@ -18,5 +18,6 @@ void uart_puts(const char *str);
 unsigned char uart_getc(void);
 void uart_println(const char *str);
 void uart_put_uint(uint32_t val);
+void uart_puthex(uint32_t n);
 
 #endif

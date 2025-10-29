@@ -57,3 +57,21 @@ void uart_put_uint(uint32_t val) {
   uint_to_string(val, s);
   uart_puts(s);
 }
+
+void uart_puthex(uint32_t n) {
+  uart_putc('0');
+  uart_putc('x');
+
+  for (int i = 28; i >= 0; i -= 4) {
+    uint32_t nibble_value = (n >> i) & 0x0F;
+
+    char hex_char;
+    if (nibble_value < 10) {
+      hex_char = nibble_value + '0';
+    } else {
+      hex_char = (nibble_value - 10) + 'A';
+    }
+
+    uart_putc(hex_char);
+  }
+}
