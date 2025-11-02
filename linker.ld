@@ -3,8 +3,10 @@ ENTRY(_start)
 SECTIONS {
   . = 0x40000000; /* 0x40100000, 0x41000000 */
 
-  .text : {
+  .text : ALIGN(2048)
+  {
     *(.text.boot)
+    *(.text.vectors)
     *(.text)
   }
 
