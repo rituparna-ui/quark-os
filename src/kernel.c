@@ -1,5 +1,6 @@
 #include "lib/uart/uart.h"
 #include "lib/utils/utils.h"
+#include <stdint.h>
 
 void init_vectors(void);
 
@@ -46,6 +47,12 @@ void kernel_main() {
 
   uart_puts("...returned from exception successfully.\n");
 
+  uart_puts("Testing divide by zero error\n");
+  int a = 5;
+  int b = a - 5;
+  int c = a / b;
+  if (c == 0) {
+  }
   uart_puts("Test complete. Halting.\n");
 
   while (1) {
