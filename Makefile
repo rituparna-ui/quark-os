@@ -39,33 +39,33 @@ all: $(TARGET)
 
 # Depends on all .o files
 $(TARGET): $(OBJECTS)
-  @echo "LD  $@"
-  @mkdir -p $(dir $@)
-  @$(LD) $(LDFLAGS) -o $@ $^
+	@echo "LD  $@"
+	@mkdir -p $(dir $@)
+	@$(LD) $(LDFLAGS) -o $@ $^
 
 # Compile all .c files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-  @echo "CC  $<"
-  @mkdir -p $(dir $@)
+	@echo "CC  $<"
+	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 # Compile all .S files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.S
 	@echo "AS  $<"
-  @mkdir -p $(dir $@)
-  @$(AS) $(ASFLAGS) $< -o $@
+	@mkdir -p $(dir $@)
+	@$(AS) $(ASFLAGS) $< -o $@
 
 # Run QEMU
 run: all
-  @qemu-system-aarch64 $(QEMU_FLAGS_RUN)
+	@qemu-system-aarch64 $(QEMU_FLAGS_RUN)
 
 debug: all
-  @qemu-system-aarch64 $(QEMU_FLAGS_DEBUG)
+	@qemu-system-aarch64 $(QEMU_FLAGS_DEBUG)
 
 gdb:
-  @gdb-multiarch build/kernel.elf
+	@gdb-multiarch build/kernel.elf
 
 clean:
 	@echo "Cleaning up..."
-  @rm -rf $(BUILD_DIR)
+	@rm -rf $(BUILD_DIR)
 
