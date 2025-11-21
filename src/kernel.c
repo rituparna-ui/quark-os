@@ -1,3 +1,4 @@
+#include "heap/heap.h"
 #include "lib/uart/uart.h"
 
 void uint32_to_hex_string(uint32_t value, char *buffer) {
@@ -21,20 +22,7 @@ void uint32_to_hex_string(uint32_t value, char *buffer) {
 void kernel_main() {
   uart_init();
 
-  char buffer[20];
-  uint32_t heap_start = 0;
-  uint32_t heap_end = 0;
-
-  __asm__ volatile("ldr %0, =_heap_start" : "=r"(heap_start)::"memory");
-  __asm__ volatile("ldr %0, =_heap_end" : "=r"(heap_end)::"memory");
-
-  uart_puts("Heap start address: ");
-  uint32_to_hex_string(heap_start, buffer);
-  uart_println(buffer);
-
-  uart_puts("Heap end address: ");
-  uint32_to_hex_string(heap_end, buffer);
-  uart_println(buffer);
+  heap_init();
 
   while (1) {
   }
