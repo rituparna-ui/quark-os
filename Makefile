@@ -31,9 +31,9 @@ LDFLAGS := -nostdlib -T linker.ld
 # QEMU_FLAGS := -machine virt,virtualization=on,secure=on -nographic -cpu cortex-a72 -kernel $(TARGET)
 # QEMU_FLAGS := -machine virt,virtualization=on -nographic -cpu cortex-a72 -kernel $(TARGET)
 # QEMU_FLAGS := -machine virt -nographic -cpu cortex-a72 -kernel $(TARGET)
-QEMU_FLAGS_RUN := -machine virt -nographic -cpu cortex-a72 -kernel $(TARGET)
 # QEMU_FLAGS_RUN := -machine virt -nographic -cpu cortex-a72 -kernel $(TARGET) -d in_asm
-QEMU_FLAGS_DEBUG := -machine virt -nographic -cpu cortex-a72 -kernel $(TARGET) -s -S
+QEMU_FLAGS_RUN := -machine virt,gic-version=3 -m 8G -nographic -cpu cortex-a72 -kernel $(TARGET)
+QEMU_FLAGS_DEBUG := -machine virt,gic-version=3 -m 8G -nographic -cpu cortex-a72 -kernel $(TARGET) -s -S
 
 all: $(TARGET)
 
@@ -68,4 +68,9 @@ gdb:
 clean:
 	@echo "Cleaning up..."
 	@rm -rf $(BUILD_DIR)
+
+dump_dtb:
+	@qemu-system-aarch64 $(QEMU_FLAGS_RUN) -machine dumpdtb=qemu-virt.dtb
+	@dtc -I dtb -O dts -o qemu-virt.dts qemu-virt.dtb
+	@rm qemu-virt.dtb
 
