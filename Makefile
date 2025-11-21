@@ -28,9 +28,9 @@ ASFLAGS := -g
 LDFLAGS := -nostdlib -T linker.ld
 
 # QEMU Config
-# QEMU_FLAGS := -machine virt,virtualization=on,secure=on -nographic -cpu cortex-a72 -kernel $(TARGET)
-# QEMU_FLAGS := -machine virt,virtualization=on -nographic -cpu cortex-a72 -kernel $(TARGET)
-# QEMU_FLAGS := -machine virt -nographic -cpu cortex-a72 -kernel $(TARGET)
+# QEMU_FLAGS_RUN := -machine virt,virtualization=on,secure=on -nographic -cpu cortex-a72 -kernel $(TARGET)
+# QEMU_FLAGS_RUN := -machine virt,virtualization=on -nographic -cpu cortex-a72 -kernel $(TARGET)
+# QEMU_FLAGS_RUN := -machine virt -nographic -cpu cortex-a72 -kernel $(TARGET)
 # QEMU_FLAGS_RUN := -machine virt -nographic -cpu cortex-a72 -kernel $(TARGET) -d in_asm
 QEMU_FLAGS_RUN := -machine virt,gic-version=3 -m 8G -nographic -cpu cortex-a72 -kernel $(TARGET)
 QEMU_FLAGS_DEBUG := -machine virt,gic-version=3 -m 8G -nographic -cpu cortex-a72 -kernel $(TARGET) -s -S
