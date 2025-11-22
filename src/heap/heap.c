@@ -1,61 +1,93 @@
 #include "heap.h"
 #include <stdint.h>
 
-// extern uint8_t _heap_start;
-// extern uint8_t _heap_end;
-// (uint32_t)(&_heap_start) can also be used
-
-// total heap size is 512mb (0x20000000)
-// size of each block = 32bytes
-// total number of blocks = 512mb / 32 bytes = 64^4
-// can be represented as an array
-// uint64 [64^3]
-struct QHeap {
+struct SimpleHeap {
   uint64_t start;
   uint64_t end;
 
-  uint64_t allocated;
+  uint64_t avail;
 
   uint64_t free_ptr;
-} heap;
+} simple_heap;
 
-uint64_t busy_map[64 * 64 * 64] = {0};
-uint64_t head_map[64 * 64 * 64] = {0};
+void uint32_to_hex_string(uint32_t value, char *buffer) {
+  const int num_digits = 8;
 
-void heap_init() {
-  __asm__ volatile("ldr %0, =_heap_start" : "=r"(heap.start));
-  __asm__ volatile("ldr %0, =_heap_end" : "=r"(heap.end));
+  for (int i = 0; i < num_digits; i++) {
+    int shift = (num_digits - 1 - i) * 4;
 
-  heap.free_ptr = heap.start;
+    uint32_t digit_value = (value >> shift) & 0xF;
 
-  uart_println("Heap Initialized !");
-}
-
-uint32_t get_32byte_aligned_size(uint32_t num_bytes) {
-  if (num_bytes == 0) {
-    return 0;
-  }
-  uint32_t num_blocks = (num_bytes + ALIGNMENT - 1) / ALIGNMENT;
-
-  return num_blocks * ALIGNMENT;
-}
-
-void *qalloc(uint32_t num_bytes) {
-  if (heap.allocated + num_bytes > 0x20000000) {
-    uart_errorln("Unable to allocate memory. Not enough space in the heap.");
-    return 0;
+    if (digit_value < 10) {
+      buffer[i] = digit_value + '0';
+    } else {
+      buffer[i] = digit_value + 'A' - 10;
+    }
   }
 
-  // if (heap.free_ptr + num_bytes > 0x20000000) {
-  //   //
-  // }
-
-  uint32_t aligned_num_byte = get_32byte_aligned_size(num_bytes);
-  uint32_t num_blocks = aligned_num_byte / ALIGNMENT;
-
-  find_free_blocks(num_blocks);
-
-  return 0;
+  buffer[num_digits] = '\0';
 }
 
-void qfree(void *addr) {}
+void simple_heap_init() {
+  __asm__ volatile("ldr %0, =_heap_start" : "=r"(simple_heap.start));
+  __asm__ volatile("ldr %0, =_heap_end" : "=r"(simple_heap.end));
+
+  simple_heap.avail = simple_heap.end - simple_heap.start;
+  simple_heap.free_ptr = simple_heap.start;
+
+  char buff[20];
+
+  uart_println("Heap Initialized");
+  uart_puts("Heap Starts: ");
+  uint32_to_hex_string(simple_heap.start, buff);
+  uart_println(buff);
+
+  uart_puts("Free Ptr: ");
+  uint32_to_hex_string(simple_heap.free_ptr, buff);
+  uart_println(buff);
+
+  uart_puts("Heap Ends: ");
+  uint32_to_hex_string(simple_heap.end, buff);
+  uart_println(buff);
+
+  return;
+}
+
+uint32_t get_32bytes_aligned_bytes(uint32_t bytes) {
+  if (bytes == 0) {
+    return 0;
+  }
+
+  uint32_t num_blocks = (bytes + 32 - 1) / 32;
+  uint32_t aligned_bytes = num_blocks * 32;
+
+  return aligned_bytes;
+}
+
+void *simple_heap_alloc(uint32_t bytes) {
+  uart_println("");
+  uart_println("Before Allocating: ");
+  char buff[20];
+
+  if (bytes > simple_heap.avail) {
+    uart_errorln("Cannot allocate. Heap full.");
+    return 0;
+  }
+
+  uart_puts("Free Ptr: ");
+  uint32_to_hex_string(simple_heap.free_ptr, buff);
+  uart_println(buff);
+
+  void *addr = (void *)simple_heap.free_ptr;
+
+  uint32_t aligned_bytes = get_32bytes_aligned_bytes(bytes);
+
+  simple_heap.free_ptr += aligned_bytes;
+
+  uart_println("After Allocating: ");
+  uart_puts("Free Ptr: ");
+  uint32_to_hex_string(simple_heap.free_ptr, buff);
+  uart_println(buff);
+
+  return addr;
+}
