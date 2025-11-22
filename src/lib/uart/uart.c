@@ -49,3 +49,8 @@ void uart_println(const char *str) {
   uart_puts(str);
   uart_putc('\n');
 }
+
+void uart_errorln(const char *str) {
+  uart_puts("ERROR!: ");
+  uart_println(str);
+}
