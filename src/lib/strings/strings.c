@@ -61,3 +61,26 @@ char *uint32_to_dec_string(uint32_t value) {
 
   return buffer;
 }
+
+char *uint32_to_bin_string(uint32_t value) {
+  const int num_bits = 32;
+  const int prefix_len = 2;
+  const int total_len = prefix_len + num_bits;
+
+  char *buffer = (char *)simple_heap_alloc(total_len + 1);
+  if (!buffer) {
+    return "ERR";
+  }
+
+  buffer[0] = '0';
+  buffer[1] = 'b';
+
+  for (int i = 0; i < num_bits; i++) {
+    int shift = (num_bits - 1 - i);
+    uint32_t bit = (value >> shift) & 1;
+    buffer[prefix_len + i] = bit ? '1' : '0';
+  }
+
+  buffer[total_len] = '\0';
+  return buffer;
+}
