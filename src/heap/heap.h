@@ -1,6 +1,7 @@
 #ifndef HEAP_H
 #define HEAP_H
 
+#include "../lib/strings/strings.h"
 #include "../lib/uart/uart.h"
 #include <stdint.h>
 
