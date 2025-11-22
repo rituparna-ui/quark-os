@@ -4,8 +4,10 @@
 
 void kernel_main() {
   uart_init();
-  simple_heap_init();
   uart_println("Quark OS - Booting Up");
+
+  simple_heap_init();
+
   print_current_el();
 
   while (1) {
