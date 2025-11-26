@@ -1,8 +1,9 @@
 #! /bin/bash
 
-aarch64-linux-gnu-as boot.S -o boot.o
-aarch64-linux-gnu-gcc -ffreestanding -c kernel.c -o kernel.o
-aarch64-linux-gnu-ld -nostdlib -T linker.ld boot.o kernel.o -o kernel.elf
+# aarch64-linux-gnu-as boot.S -o boot.o
+aarch64-linux-gnu-gcc -c boot.S -o boot.o -g
+aarch64-linux-gnu-gcc -ffreestanding -c kernel.c -o kernel.o -g
+aarch64-linux-gnu-ld -nostdlib -T linker.ld boot.o kernel.o -o kernel.elf -g
 
 qemu-system-aarch64 -machine virt -nographic -cpu cortex-a72 -kernel kernel.elf
 # qemu-system-aarch64 -machine virt -nographic -cpu cortex-a72 -kernel kernel.elf -s -S

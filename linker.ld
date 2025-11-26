@@ -1,23 +1,43 @@
 ENTRY(_start)
 
-SECTIONS {
-  . = 0x40000000; /* 0x40100000, 0x41000000 */
+SECTIONS
+{
+    /* * The kernel is loaded at physical address 0x40000000 by QEMU.
+     * However, we want the symbols to resolve to High Virtual Addresses.
+     * Base of 39-bit upper region + 1GB (RAM offset) 
+     */
+    . = 0xFFFFFF8040000000;
 
-  .text : {
-    *(.text.boot)
-    *(.text)
-  }
+    /* * AT(...) specifies the Load Memory Address (LMA).
+     * This ensures the binary file is generated with physical offsets,
+     * but code assumes it is running at the virtual address.
+     */
+    .text : AT(0x40000000) {
+        KEEP(*(.text.boot))
+        *(.text)
+    }
 
-  .data : {
-    *(.data)
-  }
+    .rodata : { *(.rodata) }
+    .data : { *(.data) }
+    
+    . = ALIGN(0x1000);
+    .bss : {
+        bss_begin = .;
+        *(.bss)
+        *(COMMON)
+        bss_end = .;
+    }
 
-  .bss : {
-    *(.bss)
-    *(COMMON)
-  }
+    /* * Reserve space for Page Tables.
+     * We need 4KB alignment.
+     */
+    . = ALIGN(0x1000);
+    idmap_dir = .;
+    . += 0x1000;
+    highmap_dir = .;
+    . += 0x1000;
 
-  _stack_end = .;
-  . += 0x4000; /* 16kB of stack */
-  _stack_top = .;
+    /* Stack */
+    . += 0x1000;
+    _stack_top = .;
 }
