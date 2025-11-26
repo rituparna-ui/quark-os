@@ -21,31 +21,38 @@ unsigned char uart_getc(void) {
 }
 
 void uart_init() {
-  // disable uart
   mmio_write(UART_CR, 0x00000000);
-
-  // clear pending interrupts
   mmio_write(UART_ICR, 0x7FF);
 
-  // setup baudrate
-  // Divider = UART_CLOCK/(16 * Baud)
-  // UART_CLOCK = 48000000; Baud = 115200
-  // Divider = 48000000/(16 * 115200) = 26.041666667
-  // Integer = 26
-  // Fraction = 0.041667
-  // Fraction register = round(0.0416667 * 2^6) = 3
+  // Baud rate setup
   mmio_write(UART_IBRD, 26);
   mmio_write(UART_FBRD, 3);
 
-  // Enable FIFO & 8 bit data transmission (1 stop bit, no parity)
   mmio_write(UART_LCRH, (1 << 4) | (1 << 5) | (1 << 6));
 
-  // Enable UART, RX & TX
+  // Enable RX Interrupt (Bit 4).
+  // We mask it (set it to 1) to enable passing to the interrupt controller.
+  mmio_write(UART_IMSC, (1 << 4));
+
   mmio_write(UART_CR, (1 << 0) | (1 << 8) | (1 << 9));
-  uart_println("UART Initialized !");
 }
 
 void uart_println(const char *str) {
   uart_puts(str);
   uart_putc('\n');
+}
+
+void uart_handle_irq(void) {
+  // Check if it is a Receive Interrupt (RXMIS)
+  if (mmio_read(UART_MIS) & (1 << 4)) {
+    char c = (char)mmio_read(UART_DR);
+
+    // ECHO: Print it back immediately to prove it works
+    // In a real OS, you would write this to a Ring Buffer
+    uart_putc(':');
+    uart_putc(c);
+
+    // Clear the interrupt
+    mmio_write(UART_ICR, (1 << 4));
+  }
 }
