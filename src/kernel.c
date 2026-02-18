@@ -4,11 +4,11 @@
 #define UART_DR ((volatile uint32_t *)(UART_BASE + 0x00))
 
 void kernel_main() {
-  *UART_DR = 'H';
-  *UART_DR = 'e';
-  *UART_DR = 'l';
-  *UART_DR = 'l';
-  *UART_DR = 'o';
+  char *hello = "Hello, World !";
+
+  while (*hello) {
+    *UART_DR = *hello++;
+  }
 
   while (1) {
   }
