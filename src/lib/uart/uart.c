@@ -1,4 +1,5 @@
 #include "uart.h"
+#include "mmio/mmio.h"
 
 // PL011
 void uart_init() {

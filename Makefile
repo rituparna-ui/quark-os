@@ -22,7 +22,7 @@ C_OBJECTS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(C_SOURCES))
 OBJECTS := $(S_OBJECTS) $(C_OBJECTS)
 
 # Flags
-CFLAGS := -ffreestanding -g -nostdlib -nostartfiles -Wall -Wextra -O0 -mstrict-align
+CFLAGS := -ffreestanding -g -nostdlib -nostartfiles -Wall -Wextra -O0 -mstrict-align -I $(SRC_DIR)/lib
 ASFLAGS := -g
 LDFLAGS := -nostdlib -g -T linker.ld
 
@@ -73,6 +73,20 @@ tmux: all
   "$(QEMU_BASE) $(QEMU_FLAGS_DEBUG)" \; \
   split-window -h -p 75 '$(GDB_CMD)' \; \
   attach
+
+compile_commands.json: $(C_SOURCES)
+	@echo "Generating compile_commands.json..."
+	@echo "[" > $@
+	@first=true; \
+	for src in $(C_SOURCES); do \
+		if [ "$$first" = true ]; then first=false; else echo "," >> $@; fi; \
+		echo "  {" >> $@; \
+		echo "    \"directory\": \"$(CURDIR)\"," >> $@; \
+		echo "    \"command\": \"$(CC) $(CFLAGS) -c $$src\"," >> $@; \
+		echo "    \"file\": \"$$src\"" >> $@; \
+		echo "  }" >> $@; \
+	done
+	@echo "]" >> $@
 
 clean:
 	@echo "Cleaning up..."

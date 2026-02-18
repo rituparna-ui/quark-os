@@ -1,8 +1,6 @@
 #ifndef LIB_UART_H
 #define LIB_UART_H
 
-#include "../mmio/mmio.h"
-
 #define UART_BASE 0x09000000
 #define UART_DR (UART_BASE + 0x00)
 #define UART_FR (UART_BASE + 0x18)

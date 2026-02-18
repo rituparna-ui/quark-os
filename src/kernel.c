@@ -1,4 +1,4 @@
-#include "lib/uart/uart.h"
+#include "uart/uart.h"
 
 #define UART_BASE 0x09000000
 #define UART_DR (UART_BASE + 0x00)

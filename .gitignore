@@ -1,4 +1,6 @@
 *.o
 *.elf
 build/
+.cache/
+compile_commands.json
 
