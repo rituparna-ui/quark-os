@@ -28,7 +28,7 @@ LDFLAGS := -nostdlib -g -T linker.ld
 
 # QEMU Config
 QEMU_CPU := cortex-a72
-QEMU_MACHINE := virt
+QEMU_MACHINE := virt,gic-version=3 -m 8G
 QEMU_BASE := qemu-system-aarch64 -machine $(QEMU_MACHINE) -nographic -cpu $(QEMU_CPU)
 
 QEMU_FLAGS_RUN   := -kernel $(TARGET)
@@ -87,6 +87,11 @@ compile_commands.json: $(C_SOURCES)
 		echo "  }" >> $@; \
 	done
 	@echo "]" >> $@
+
+dump_dts:
+	$(QEMU_BASE) $(QEMU_FLAGS_RUN) -machine dumpdtb=qemu-virt.dtb
+	@dtc -I dtb -O dts -o qemu-virt.dts qemu-virt.dtb
+	@rm qemu-virt.dtb
 
 clean:
 	@echo "Cleaning up..."
