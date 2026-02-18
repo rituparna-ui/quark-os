@@ -68,10 +68,10 @@ GDB_CMD := $(GDB) $(TARGET) $(GDB_FLAGS)
 gdb:
 	@$(GDB_CMD)
 
-tmux:
+tmux: all
 	tmux new-session -d -s debug \
   "$(QEMU_BASE) $(QEMU_FLAGS_DEBUG)" \; \
-  split-window -h '$(GDB_CMD)' \; \
+  split-window -h -p 75 '$(GDB_CMD)' \; \
   attach
 
 clean:
