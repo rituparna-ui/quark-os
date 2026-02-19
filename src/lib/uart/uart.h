@@ -20,5 +20,6 @@ void uart_println(const char *str);
 void uart_puthex(uint64_t val);
 void uart_putdec(uint64_t val);
 void uart_putbin(uint64_t val);
+void uart_errorln(const char *err);
 
 #endif // !LIB_UART_H

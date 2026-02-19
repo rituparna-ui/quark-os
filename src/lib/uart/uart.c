@@ -53,6 +53,12 @@ void uart_println(const char *str) {
   uart_putc('\n');
 }
 
+void uart_errorln(const char *err) {
+  uart_puts("[ERROR!]: ");
+  uart_puts(err);
+  uart_putc('\n');
+}
+
 void uart_puthex(uint64_t val) {
   const char hex[] = "0123456789abcdef";
   uart_puts("0x");
