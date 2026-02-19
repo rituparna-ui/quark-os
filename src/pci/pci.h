@@ -35,7 +35,7 @@ struct pci_device {
 
 void pci_enumerate_bus(void);
 uint8_t pci_get_header_type(struct pci_device *dev);
-void pci_read_bars(struct pci_device *dev);
+void pci_assign_bars(struct pci_device *dev);
 int pci_find_device(uint16_t vendor_id, uint16_t device_id,
                     struct pci_device *pci_device);
 

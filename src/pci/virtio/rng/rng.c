@@ -22,7 +22,6 @@ void pci_virtio_rng_init() {
   }
 
   // assign bars
+  pci_assign_bars(&rng_dev.pci);
   // enable device
-
-  pci_read_bars(&rng_dev.pci);
 }

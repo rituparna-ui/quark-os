@@ -87,8 +87,9 @@ uint8_t pci_get_header_type(struct pci_device *dev) {
   return header_type;
 }
 
-void pci_read_bars(struct pci_device *dev) {
+void pci_assign_bars(struct pci_device *dev) {
   for (int i = 0; i < 6; i++) {
+
     uint32_t bar =
         pci_config_read32(dev->bus, dev->slot, dev->func, PCI_BAR_0 + i * 4);
     if (bar) {
