@@ -2,8 +2,8 @@
 
 # -g for gdb debugging symbols
 aarch64-linux-gnu-as -g boot.S -o boot.o
-
-aarch64-linux-gnu-ld -nostdlib -g -T linker.ld boot.o -o kernel.elf
+aarch64-linux-gnu-gcc -ffreestanding -g -nostdlib -nostartfiles -Wall -Wextra -O0 -mstrict-align -c kernel.c -o kernel.o
+aarch64-linux-gnu-ld -nostdlib -g -T linker.ld boot.o kernel.o -o kernel.elf
 
 qemu-system-aarch64 -machine virt -nographic -cpu max -kernel kernel.elf -s -S
 # gdb-multiarch ./kernel.elf -ex "target remote :1234" -ex "layout split"

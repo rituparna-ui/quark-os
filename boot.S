@@ -2,4 +2,7 @@
 .global _start
 
 _start:
-  b .
+  ldr x0, =__stack_top
+  mov sp, x0
+
+  b kernel_main
