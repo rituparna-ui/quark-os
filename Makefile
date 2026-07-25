@@ -76,6 +76,25 @@ tmux:
 		split-window -h '$(GDB_CMD)' \; \
 		attach
 
+compile_commands.json: $(C_SOURCES)
+	@echo "Generating compile_commands.json..."
+	@echo "[" > $@
+	@first=true; \
+	for src in $(C_SOURCES); do \
+		if [ "$$first" = true ]; then first=false; else echo "," >> $@; fi; \
+		echo "  {" >> $@; \
+		echo "    \"directory\": \"$(CURDIR)\"," >> $@; \
+		echo "    \"command\": \"$(CC) $(CFLAGS) -c $$src\"," >> $@; \
+		echo "    \"file\": \"$$src\"" >> $@; \
+		echo "  }" >> $@; \
+	done
+	@echo "]" >> $@
+
+dump_dts:
+	$(QEMU_BASE) $(QEMU_FLAGS_RUN) -machine dumpdtb=$(BUILD_DIR)/qemu-virt.dtb
+	@dtc -I dtb -O dts -o $(BUILD_DIR)/qemu-virt.dts $(BUILD_DIR)/qemu-virt.dtb
+	@rm $(BUILD_DIR)/qemu-virt.dtb
+
 clean:
 	@echo "Cleaning up..."
 	@rm -rf $(BUILD_DIR)
