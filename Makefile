@@ -29,7 +29,9 @@ LDFLAGS := -nostdlib -g -T linker.ld
 # QEMU Config
 # qemu-system-aarch64 -machine virt -nographic -cpu max -kernel kernel.elf -s -S
 QEMU_CPU := max
-QEMU_MACHINE := virt
+QEMU_MACHINE := virt,gic-version=3 -m 8G
+# QEMU_MACHINE := virt,gic-version=3,virtualization=on -m 8G
+# QEMU_MACHINE := virt,gic-version=3,virtualization=on,secure=on -m 8G
 QEMU_BASE := qemu-system-aarch64 -machine $(QEMU_MACHINE) -nographic -cpu $(QEMU_CPU)
 
 QEMU_FLAGS_RUN := -kernel $(TARGET)
