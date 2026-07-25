@@ -21,10 +21,6 @@ void kernel_main() {
   print_current_el();
   pmm_init(MEM_START, MEM_SIZE);
 
-  uart_printf("Hello, %s, This is an integer: %d, an unsigned: %u, hex: %x, "
-              "ptr: %p, bin: %b, char: %c with 100%% \n",
-              "Rituu", (int64_t)-5, 10, 0x40, 0x40000000, 0b1011, 'x');
-
   while (1) {
   }
 }
