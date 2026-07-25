@@ -1,4 +1,5 @@
 *.out
 *.o
 *.elf
+compile_commands.json
 

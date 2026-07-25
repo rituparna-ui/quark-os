@@ -1,14 +1,10 @@
+#include "lib/uart/uart.h"
 #include <stdint.h>
 
-#define UART_BASE 0x9000000UL
-#define UART_DR (UART_BASE + 0x00)
-
 void kernel_main() {
-  char *str = "Hello, World !";
+  char *str = "Quark-OS Booting up...";
 
-  while (*str) {
-    *(volatile uint32_t *)UART_BASE = *str++;
-  }
+  uart_puts(str);
 
   while (1) {
   }
