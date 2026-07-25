@@ -23,4 +23,6 @@ void uart_puthex(uint64_t value);
 void uart_putdec(uint64_t value);
 void uart_putbin(uint64_t value);
 
+void uart_printf(const char *str, ...);
+
 #endif
