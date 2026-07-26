@@ -16,9 +16,9 @@ void uart_init(void) {
   // clk = 24000000 / (16 * 115200) = 13.02083333
   // integer = 13
   // fraction = 0.02083333
-  // fraction register = round(0.02083333 * 64) = 2
+  // fraction register = round(0.02083333 * 64) = 1
   mmio_write32(UART_IBRD, 13);
-  mmio_write32(UART_FBRD, 2);
+  mmio_write32(UART_FBRD, 1);
 
   // enable FIFO, 8bit data transmission - 1 stop bit, no parity
   mmio_write32(UART_LCRH, (1 << 4) | (1 << 5) | (1 << 6));
@@ -34,7 +34,7 @@ uint8_t uart_getc(void) {
   while (mmio_read32(UART_FR) & (1 << 4)) {
   }
 
-  uint8_t value = mmio_read8(UART_DR);
+  uint8_t value = mmio_read32(UART_DR);
   return value;
 }
 
@@ -94,7 +94,7 @@ void uart_putc(const char c) {
   while (mmio_read32(UART_FR) & (1 << 5)) {
   }
 
-  mmio_write8(UART_DR, c);
+  mmio_write32(UART_DR, c);
   return;
 }
 
@@ -135,7 +135,7 @@ void uart_printf(const char *fmt, ...) {
       int64_t val = va_arg(args, int64_t);
       if (val < 0) {
         uart_putc('-');
-        uart_putdec((uint64_t)(-val));
+        uart_putdec(-(uint64_t)val);
       } else {
         uart_putdec((uint64_t)val);
       }

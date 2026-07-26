@@ -31,10 +31,10 @@ void pmm_print_info(void) {
               mem_region_end);
   uart_printf("[PMM][INFO] Memory Size: %x bytes | %d mbytes\n", MEM_SIZE,
               MEM_SIZE / 1024 / 1024);
-  uart_printf("[PMM][INFO] Total Pages: %d\n", total_pages);
-  uart_printf("[PMM][INFO] Reserved Pages: %d\n", reserved_pages);
-  uart_printf("[PMM][INFO] Used Pages: %d\n", used_pages);
-  uart_printf("[PMM][INFO] Free Pages: %d\n", total_pages - used_pages);
+  uart_printf("[PMM][INFO] Total Pages: %u\n", total_pages);
+  uart_printf("[PMM][INFO] Reserved Pages: %u\n", reserved_pages);
+  uart_printf("[PMM][INFO] Used Pages: %u\n", used_pages);
+  uart_printf("[PMM][INFO] Free Pages: %u\n", total_pages - used_pages);
 }
 
 void pmm_init(uintptr_t mem_start, uint64_t mem_size) {
@@ -59,6 +59,9 @@ void pmm_init(uintptr_t mem_start, uint64_t mem_size) {
   uint64_t bitmap_end = (uint64_t)bitmap + bitmap_bytes;
   uint64_t reserved_end = PAGE_ALIGN_UP(bitmap_end);
   reserved_pages = (reserved_end - mem_region_start) / PAGE_SIZE;
+
+  // zero the bitmap before marking reserved pages
+  memset(bitmap, 0, bitmap_bytes);
 
   // Mark reserved pages
   for (uint64_t pfn = 0; pfn < reserved_pages; pfn++) {

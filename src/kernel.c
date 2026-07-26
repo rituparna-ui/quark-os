@@ -7,11 +7,12 @@ void enable_fp_simd() {
   // CPACR_EL1.FPEN = 0b11 - do not trap FP/SIMD instructions
   // GCC uses SIMD registers for varargs
   // got ESR_EL1 = 0x1fe00000 while building UART printf
-  uint64_t cpacr = -1;
+  uint64_t cpacr;
 
   __asm__ __volatile__("mrs %0, cpacr_el1" : "=r"(cpacr));
   cpacr |= (3ULL << 20);
-  __asm__ __volatile__("msr cpacr_el1, %0" : "=r"(cpacr));
+  __asm__ __volatile__("msr cpacr_el1, %0" : : "r"(cpacr));
+  __asm__ __volatile__("isb");
 }
 
 void kernel_main() {

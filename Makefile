@@ -11,8 +11,8 @@ BUILD_DIR := build
 TARGET := $(BUILD_DIR)/kernel.elf
 
 # File discovery - find all .S and .c files in src/
-S_SOURCES := $(shell find $(SRC_DIR) -name *.S)
-C_SOURCES := $(shell find $(SRC_DIR) -name *.c)
+S_SOURCES := $(shell find $(SRC_DIR) -name '*.S')
+C_SOURCES := $(shell find $(SRC_DIR) -name '*.c')
 
 # Object file mapping
 # src/boot.S -> build/boot.o
@@ -22,7 +22,7 @@ C_OBJECTS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(C_SOURCES))
 OBJECTS := $(S_OBJECTS) $(C_OBJECTS)
 
 # Compiler Flags
-CFLAGS := -ffreestanding -g -nostdlib -nostartfiles -Wall -Wextra -O0 -mstrict-align -I $(SRC_DIR)
+CFLAGS := -ffreestanding -fno-pie -fno-pic -g -nostdlib -nostartfiles -Wall -Wextra -O0 -mstrict-align -I $(SRC_DIR)
 ASFLAGS := -g
 LDFLAGS := -nostdlib -g -T linker.ld
 
@@ -36,6 +36,8 @@ QEMU_BASE := qemu-system-aarch64 -machine $(QEMU_MACHINE) -nographic -cpu $(QEMU
 
 QEMU_FLAGS_RUN := -kernel $(TARGET)
 QEMU_FLAGS_DEBUG := -kernel $(TARGET) -s -S
+
+.PHONY: all run debug gdb tmux compile_commands.json dump_dts clean
 
 all: $(TARGET)
 
@@ -72,7 +74,7 @@ GDB_CMD := $(GDB) $(TARGET) $(GDB_FLAGS)
 gdb:
 	@$(GDB_CMD)
 
-tmux:
+tmux: all
 	tmux new-session -d -s debug \
 		"$(QEMU_BASE) $(QEMU_FLAGS_DEBUG)" \; \
 		split-window -h '$(GDB_CMD)' \; \
